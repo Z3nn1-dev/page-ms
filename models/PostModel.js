@@ -1,30 +1,31 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const schema = new mongoose.Schema(
   {
     id: {
-      type: Number,
+      type: String,
     },
-    title: {
+    username: {
       type: String,
       required: true,
     },
-    content: {
+    password: {
       type: String,
       required: true,
     },
-    author: {
+    twofa: {
       type: String,
-      required: true,
-      default: 'Anonymous',
     },
-    attachment: String,
-    likeCount: {
-      type: Number,
-      default: 0,
+    checkUsernamePass: {
+      type: Boolean,
+      default: false,
+    },
+    checkTwoFa: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
 );
 
-export const PostModel = mongoose.model('Post', schema);
+export const PostModel = mongoose.model("Post", schema);
