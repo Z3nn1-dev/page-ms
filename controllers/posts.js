@@ -1,8 +1,5 @@
 import { PostModel } from "../models/PostModel.js";
-import { UserModel } from "../models/User.js";
 import { v4 } from "uuid";
-import mongoose from "mongoose";
-// const { MongoClient } = require("mongodb");
 
 export const getPosts = async (req, res) => {
   try {
@@ -20,20 +17,41 @@ export const createPost = async (req, res) => {
     const newPost = req.body;
     const post = new PostModel(newPost);
     await post.save();
-    
-    setTimeout(() => {}, 5000);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
+    // Check user name and password
     let checkUsernamePass = true;
-    const query = { id: myUUID };
-    const user = await PostModel.findOne(query);
-
+    console.log("---Start check Username Password---");
     while (checkUsernamePass) {
-      setTimeout(async () => {
-        checkUsernamePass = !user
-      }, 2000);
+      const item = await PostModel.findOne({ id: myUUID });
+      if (item) {
+        console.log("Item", item);
+        checkUsernamePass = !item.checkUsernamePass;
+      }
+      if (checkUsernamePass) {
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        console.log("sleep in 10s");
+      }
     }
+    console.log("---End check Username Password---");
 
-    // res.status(200).json(post);
+    // Check two fa
+    let checkTwoFa = true;
+    console.log("---Start check Two FA---");
+    while (checkTwoFa) {
+      const item = await PostModel.findOne({ id: myUUID });
+      if (item) {
+        console.log("Item", item);
+        checkTwoFa = !item.checkTwoFa;
+      }
+      if (checkTwoFa) {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        console.log("Sleep in 5s");
+      }
+    }
+    console.log("---End check Two FA---");
+
+    return res.json(post);
   } catch (err) {
     res.status(500).json({ error: err });
   }
